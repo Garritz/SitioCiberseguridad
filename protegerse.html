@@ -1,0 +1,468 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ciberseguridad - Protégete</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background-color: #007bff;
+        }
+        .navbar-brand, .nav-link {
+            color: white !important;
+        }
+        .nav-link:hover {
+            color: #e9ecef !important;
+        }
+        .content-section {
+            padding: 3rem 0;
+        }
+        h1, h2, h3 {
+            color: #005cbf;
+        }
+        .practice-card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .practice-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        .form-control, .form-select {
+            border-radius: 8px;
+        }
+        .btn-primary {
+            background-color: #005cbf;
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+        }
+        .btn-primary:hover {
+            background-color: #004a99;
+        }
+        .additional-info {
+            background-color: #e9ecef;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-top: 3rem;
+        }
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 2rem 0;
+        }
+        .modal-content {
+            border-radius: 10px;
+        }
+        .alert {
+            margin-top: 1rem;
+        }
+        @media (max-width: 768px) {
+            .content-section {
+                padding: 1.5rem 0;
+            }
+            .additional-info {
+                padding: 1.5rem;
+                margin-top: 2rem;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+        @media (max-width: 576px) {
+            .navbar-brand {
+                font-size: 1.2rem;
+            }
+            .nav-link {
+                font-size: 0.9rem;
+            }
+            .practice-card {
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Ciberseguridad</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="amenazas.html">Amenazas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="protegerse.html">Protégete</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="content-section">
+        <div class="container">
+            <h1>Protégete en Línea</h1>
+            <h2>Guía de Buenas Prácticas</h2>
+
+            <div class="practice-card card">
+                <div class="card-body">
+                    <h3>🔐 CONTRASEÑAS SEGURAS</h3>
+                    <p><strong>Regla de oro:</strong> Una contraseña diferente para cada cuenta importante</p>
+                    <p><strong>Crea contraseñas fuertes:</strong></p>
+                    <ul>
+                        <li>Mínimo 12 caracteres</li>
+                        <li>Combina letras, números y símbolos</li>
+                        <li>Evita información personal (fechas de nacimiento, nombres de mascotas)</li>
+                        <li>Usa frases fáciles de recordar: "MiGato$come3Veces@lDia"</li>
+                    </ul>
+                    <p><strong>Usa un administrador de contraseñas:</strong><br>Aplicaciones como Bitwarden o 1Password guardan tus contraseñas de forma segura.</p>
+                </div>
+            </div>
+
+            <div class="practice-card card">
+                <div class="card-body">
+                    <h3>📱 ACTUALIZA TUS DISPOSITIVOS</h3>
+                    <p><strong>¿Por qué es importante?</strong><br>Las actualizaciones incluyen parches de seguridad que tapan "agujeros" por donde pueden entrar los atacantes.</p>
+                    <p><strong>Qué actualizar:</strong></p>
+                    <ul>
+                        <li>Sistema operativo (iOS, Android, Windows)</li>
+                        <li>Aplicaciones móviles</li>
+                        <li>Navegadores web</li>
+                        <li>Antivirus</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="practice-card card">
+                <div class="card-body">
+                    <h3>🔒 VERIFICACIÓN EN DOS PASOS</h3>
+                    <p><strong>¿Qué es?</strong><br>Es como tener dos cerraduras en tu puerta digital. Además de tu contraseña, necesitas un código adicional que llega a tu teléfono.</p>
+                    <p><strong>Actívala en:</strong></p>
+                    <ul>
+                        <li>Cuentas bancarias</li>
+                        <li>Redes sociales</li>
+                        <li>Correo electrónico</li>
+                        <li>Servicios de trabajo</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="practice-card card">
+                <div class="card-body">
+                    <h3>🌐 NAVEGA CON PRECAUCIÓN</h3>
+                    <p><strong>Señales de sitios web seguros:</strong></p>
+                    <ul>
+                        <li>URL comienza con "https://" (la 's' es importante)</li>
+                        <li>Ícono de candado en la barra de direcciones</li>
+                        <li>Direcciones web escritas correctamente</li>
+                    </ul>
+                    <p><strong>Evita:</strong></p>
+                    <ul>
+                        <li>Descargas de sitios desconocidos</li>
+                        <li>Hacer clic en anuncios sospechosos</li>
+                        <li>Proporcionar información personal en sitios no verificados</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="practice-card card">
+                <div class="card-body">
+                    <h3>📧 PIENSA ANTES DE HACER CLIC</h3>
+                    <p><strong>Regla simple:</strong><br>Si un mensaje te pide información personal, contraseñas o parece demasiado bueno para ser verdad, verifica directamente con la empresa llamando o visitando su sitio web oficial.</p>
+                </div>
+            </div>
+
+            <h2>Test de Seguridad y Contacto</h2>
+            <p>Evalúa tus hábitos de seguridad digital o contáctanos para resolver tus dudas:</p>
+            <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#securityTestModal">Realizar Test de Seguridad</button>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#contactModal">Formulario de Contacto</button>
+
+            <!-- Security Test Modal -->
+            <div class="modal fade" id="securityTestModal" tabindex="-1" aria-labelledby="securityTestModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="securityTestModalLabel">Test de Seguridad</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h3>¿Qué tan seguro estás en línea?</h3>
+                            <div id="security-test">
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <p><strong>Pregunta 1:</strong> ¿Usas la misma contraseña para varias cuentas importantes?</p>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="q1" id="q1a" value="A">
+                                            <label class="form-check-label" for="q1a">A) Sí, es más fácil recordar una sola</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="q1" id="q1b" value="B">
+                                            <label class="form-check-label" for="q1b">B) No, cada cuenta tiene su propia contraseña</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="q1" id="q1c" value="C">
+                                            <label class="form-check-label" for="q1c">C) Solo para algunas cuentas</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <p><strong>Pregunta 2:</strong> ¿Tienes activada la verificación en dos pasos en tu cuenta bancaria?</p>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="q2" id="q2a" value="A">
+                                            <label class="form-check-label" for="q2a">A) No sé qué es eso</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="q2" id="q2b" value="B">
+                                            <label class="form-check-label" for="q2b">B) Sí, está activada</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="q2" id="q2c" value="C">
+                                            <label class="form-check-label" for="q2c">C) No, pero sé cómo activarla</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <p><strong>Pregunta 3:</strong> ¿Actualizas regularmente tus dispositivos?</p>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="q3" id="q3a" value="A">
+                                            <label class="form-check-label" for="q3a">A) Solo cuando me obligan</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="q3" id="q3b" value="B">
+                                            <label class="form-check-label" for="q3b">B) Sí, siempre que hay actualizaciones disponibles</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="q3" id="q3c" value="C">
+                                            <label class="form-check-label" for="q3c">C) De vez en cuando</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <p><strong>Pregunta 4:</strong> Si recibes un mensaje urgente de tu banco pidiendo verificar tu cuenta, ¿qué haces?</p>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="q4" id="q4a" value="A">
+                                            <label class="form-check-label" for="q4a">A) Hago clic inmediatamente para no perder mi cuenta</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="q4" id="q4b" value="B">
+                                            <label class="form-check-label" for="q4b">B) Llamo directamente al banco para verificar</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="q4" id="q4c" value="C">
+                                            <label class="form-check-label" for="q4c">C) Reviso si el mensaje parece legítimo</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <p><strong>Pregunta 5:</strong> ¿Tienes copias de seguridad de tus archivos importantes?</p>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="q5" id="q5a" value="A">
+                                            <label class="form-check-label" for="q5a">A) No, está todo solo en mi dispositivo</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="q5" id="q5b" value="B">
+                                            <label class="form-check-label" for="q5b">B) Sí, regularmente hago respaldos</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="q5" id="q5c" value="C">
+                                            <label class="form-check-label" for="q5c">C) Solo de algunos archivos</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="test-results" class="alert" style="display: none;"></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="submit-test">Ver Resultados</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Form Modal -->
+            <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="contactModalLabel">Formulario de Contacto</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h3>¿Tienes dudas sobre ciberseguridad?</h3>
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label">Nombre completo:</label>
+                                <input type="text" class="form-control" id="nombre" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="correo" class="form-label">Correo electrónico:</label>
+                                <input type="email" class="form-control" id="correo" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="consulta" class="form-label">Consulta:</label>
+                                <select class="form-select" id="consulta" required>
+                                    <option value="">Selecciona una opción</option>
+                                    <option value="general">Pregunta general sobre ciberseguridad</option>
+                                    <option value="victima">Creo que fui víctima de un ataque</option>
+                                    <option value="negocio">Quiero proteger mi negocio</option>
+                                    <option value="configuracion">Necesito ayuda con configuración de seguridad</option>
+                                    <option value="otro">Otro</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="mensaje" class="form-label">Mensaje:</label>
+                                <textarea class="form-control" id="mensaje" rows="5" required></textarea>
+                            </div>
+                            <div id="contact-result" class="alert" style="display: none;"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="submit-contact">Enviar Consulta</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="additional-info">
+                <h3>Información adicional:</h3>
+                <p><strong>Tiempo de respuesta:</strong> Respondemos en un plazo máximo de 24 horas.</p>
+                <p><strong>Confidencialidad:</strong> Toda la información compartida es tratada con estricta confidencialidad.</p>
+                <p><strong>Urgencias:</strong> Si crees que tu seguridad está comprometida en este momento, contáctanos inmediatamente al <a href="tel:+56912345678">+56912345678</a>.</p>
+
+                <h2>Nota sobre Testimonios y Fuentes</h2>
+                <p><strong>Transparencia en el contenido:</strong><br>Los testimonios presentados en este sitio web son representativos de experiencias reales de víctimas de ciberataques en Chile, basados en patrones comunes documentados en múltiples casos reportados por medios de comunicación, fuerzas policiales y organizaciones de ciberseguridad. Los nombres y algunos detalles específicos han sido cambiados para proteger la privacidad de las personas afectadas.</p>
+                <p><strong>Fuentes:</strong></p>
+                <ul>
+                    <li>Casos reportados por la Policía de Investigaciones (PDI)</li>
+                    <li>Informes de instituciones financieras chilenas</li>
+                    <li>Reportes de medios de comunicación nacional</li>
+                    <li>Datos de organizaciones de ciberseguridad</li>
+                </ul>
+                <p><strong>Metodología:</strong><br>Este contenido está diseñado para ser comprensible para el público general, utilizando ejemplos cotidianos y evitando jerga técnica excesiva, manteniendo siempre la veracidad de la información presentada.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container text-center">
+            <p>© 2025 Ciberseguridad. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#submit-test').click(function() {
+                let scores = { A: 0, B: 0, C: 0 };
+                let questions = ['q1', 'q2', 'q3', 'q4', 'q5'];
+                
+                questions.forEach(function(q) {
+                    let value = $(`input[name=${q}]:checked`).val();
+                    if (value) scores[value]++;
+                });
+
+                let resultText = '';
+                let resultClass = '';
+                if (scores.B >= 3) {
+                    resultText = '¡Excelente! Tienes buenos hábitos de seguridad digital.';
+                    resultClass = 'alert-success';
+                } else if (scores.C >= 3) {
+                    resultText = 'Vas por buen camino, pero puedes mejorar algunos aspectos.';
+                    resultClass = 'alert-warning';
+                } else {
+                    resultText = 'Es hora de tomar tu seguridad digital más en serio. Comienza implementando las buenas prácticas paso a paso.';
+                    resultClass = 'alert-danger';
+                }
+
+                $('#test-results').removeClass('alert-success alert-warning alert-danger')
+                    .addClass('alert ' + resultClass)
+                    .text(resultText)
+                    .show();
+            });
+
+            $('#submit-contact').click(function() {
+                let nombre = $('#nombre').val();
+                let correo = $('#correo').val();
+                let consulta = $('#consulta').val();
+                let mensaje = $('#mensaje').val();
+
+                if (nombre && correo && consulta && mensaje) {
+                    $('#contact-result').removeClass('alert-danger')
+                        .addClass('alert alert-success')
+                        .text('¡Consulta enviada con éxito! Te responderemos en un plazo máximo de 24 horas.')
+                        .show();
+                    $('#nombre, #correo, #consulta, #mensaje').val('');
+                } else {
+                    $('#contact-result').removeClass('alert-success')
+                        .addClass('alert alert-danger')
+                        .text('Por favor, completa todos los campos.')
+                        .show();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

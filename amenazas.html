@@ -1,0 +1,274 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ciberseguridad - Amenazas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background-color: #007bff;
+        }
+        .navbar-brand, .nav-link {
+            color: white !important;
+        }
+        .nav-link:hover {
+            color: #e9ecef !important;
+        }
+        .content-section {
+            padding: 3rem 0;
+        }
+        h1, h2, h3 {
+            color: #005cbf;
+        }
+        .threat-card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .threat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        .carousel-inner {
+            background-color: #e9ecef;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+        .carousel-item {
+            min-height: 200px;
+        }
+        .carousel-control-prev, .carousel-control-next {
+            width: 5%;
+        }
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            filter: invert(20%) sepia(10%) saturate(1000%) hue-rotate(180deg) brightness(90%) contrast(100%);
+        }
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 2rem 0;
+        }
+        @media (max-width: 768px) {
+            .content-section {
+                padding: 1.5rem 0;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            h2 {
+                font-size: 1.5rem;
+            }
+            .carousel-item {
+                font-size: 0.9rem;
+            }
+        }
+        @media (max-width: 576px) {
+            .navbar-brand {
+                font-size: 1.2rem;
+            }
+            .nav-link {
+                font-size: 0.9rem;
+            }
+            .threat-card {
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Ciberseguridad</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="amenazas.html">Amenazas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="protegerse.html">Protégete</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="content-section">
+        <div class="container">
+            <h1>Amenazas Cibernéticas Comunes</h1>
+            <h2>Conoce a los "Ladrones Digitales"</h2>
+            <p>Los delincuentes cibernéticos usan diferentes técnicas para robar tu información o dañar tus dispositivos. Aquí te explicamos las más comunes:</p>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="threat-card card">
+                        <div class="card-body">
+                            <h3>1. PHISHING - "El Anzuelo Digital"</h3>
+                            <p><strong>¿Qué es?</strong><br>El phishing es como pescar, pero en lugar de peces, los delincuentes "pescan" tu información personal usando mensajes falsos que parecen legítimos.</p>
+                            <p><strong>¿Cómo funciona?</strong><br>Recibes un mensaje (email, SMS, WhatsApp) que parece venir de tu banco, una tienda conocida o incluso un amigo, pidiendo que hagas clic en un enlace o proporciones información personal.</p>
+                            <p><strong>Señales de alerta:</strong></p>
+                            <ul>
+                                <li>Urgencia extrema ("Tu cuenta será cerrada en 24 horas")</li>
+                                <li>Errores de ortografía o gramática</li>
+                                <li>Direcciones de email extrañas</li>
+                                <li>Piden contraseñas o datos bancarios por mensaje</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="threat-card card">
+                        <div class="card-body">
+                            <h3>2. MALWARE - "El Virus Digital"</h3>
+                            <p><strong>¿Qué es?</strong><br>El malware es software malicioso que se instala en tu dispositivo sin que lo sepas, como un virus que enferma tu computadora o teléfono.</p>
+                            <p><strong>¿Cómo llega a tu dispositivo?</strong></p>
+                            <ul>
+                                <li>Descargas de sitios web no confiables</li>
+                                <li>Archivos adjuntos en emails sospechosos</li>
+                                <li>Aplicaciones falsas en tiendas no oficiales</li>
+                                <li>Memorias USB infectadas</li>
+                            </ul>
+                            <p><strong>Síntomas de infección:</strong></p>
+                            <ul>
+                                <li>Tu dispositivo funciona muy lento</li>
+                                <li>Aparecen ventanas emergentes extrañas</li>
+                                <li>Se abren programas que no abriste</li>
+                                <li>Tu batería se agota rápidamente</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="threat-card card">
+                        <div class="card-body">
+                            <h3>3. RANSOMWARE - "El Secuestro Digital"</h3>
+                            <p><strong>¿Qué es?</strong><br>El ransomware "secuestra" tus archivos, los cifra (los hace ilegibles) y pide dinero para "liberarlos".</p>
+                            <p><strong>¿Cómo funciona?</strong><br>Imagina que llegas a casa y encuentras todas tus fotos, documentos y videos bloqueados con un candado digital. Los delincuentes te piden pagar para darte la llave.</p>
+                            <p><strong>Prevención clave:</strong></p>
+                            <ul>
+                                <li>Hacer copias de seguridad regulares</li>
+                                <li>No abrir archivos sospechosos</li>
+                                <li>Mantener el software actualizado</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="threat-card card">
+                        <div class="card-body">
+                            <h3>4. ATAQUES DDoS - "El Atasco Digital"</h3>
+                            <p><strong>¿Qué es?</strong><br>Un ataque DDoS es como crear un atasco de tráfico intencional en una autopista digital, haciendo que un sitio web o servicio se vuelva inaccesible.</p>
+                            <p><strong>¿Cómo funciona?</strong><br>Los atacantes usan miles de computadoras infectadas para enviar tráfico masivo a un sitio web específico, sobrecargándolo hasta que colapsa.</p>
+                            <p><strong>¿Te puede afectar directamente?</strong><br>Aunque no atacan tu dispositivo personal, pueden impedir que uses servicios importantes como banca en línea, redes sociales o plataformas de trabajo.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Casos Reales</h2>
+            <div id="caseCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="case-content">
+                            <p><strong>Caso real (Phishing):</strong><br>En 2023, miles de usuarios chilenos recibieron correos falsos supuestamente del Banco de Chile pidiendo "verificar su cuenta". Los que hicieron clic perdieron acceso a sus cuentas bancarias. El banco nunca pide información personal por correo.</p>
+                            <p><strong>Testimonio:</strong><br>"Recibí un correo que parecía totalmente real, con los logos del banco y todo. Decía que mi cuenta sería bloqueada en 24 horas si no actualizaba mis datos. Estaba apurado, era fin de mes y necesitaba pagar cuentas. Hice clic y puse toda mi información. Al día siguiente, habían vaciado mi cuenta de ahorros. Perdí los $200.000 que tenía guardados para las vacaciones familiares." - María, 34 años, contadora de Santiago.</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="case-content">
+                            <p><strong>Caso real (Malware):</strong><br>En 2022, una aplicación falsa de delivery que circulaba por WhatsApp en Santiago robó información bancaria de cientos de usuarios. La app parecía legítima pero contenía malware.</p>
+                            <p><strong>Testimonio:</strong><br>"Un amigo me envió por WhatsApp el link de una app de delivery nueva que supuestamente tenía descuentos increíbles. Se veía profesional y hasta tenía buenas calificaciones falsas. La descargué y al poco tiempo mi teléfono empezó a funcionar lento. Después me di cuenta de que habían hecho compras con mi tarjeta de crédito sin mi autorización. Fueron más de $150.000 en compras que no hice." - Carlos, 28 años, ingeniero de Valparaíso.</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="case-content">
+                            <p><strong>Caso real (Ransomware):</strong><br>En 2021, el Hospital Salvador de Santiago fue atacado con ransomware, bloqueando el acceso a historias médicas y sistemas críticos durante varios días. Aunque no pagaron el rescate, tardaron semanas en recuperar completamente sus sistemas.</p>
+                            <p><strong>Testimonio:</strong><br>"Llegué el lunes al trabajo y no podía acceder a ningún sistema. Las pantallas mostraban un mensaje en inglés pidiendo dinero para 'liberar' nuestros archivos. Fue desesperante porque teníamos pacientes esperando resultados de exámenes urgentes, cirugías programadas, y no podíamos acceder a nada. Tuvimos que volver al papel por días. Como personal de salud, sentimos que estábamos fallándole a nuestros pacientes." - Dr. Rodríguez (nombre cambiado), médico del Hospital Salvador.</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="case-content">
+                            <p><strong>Caso real (DDoS):</strong><br>En 2020, varios bancos chilenos sufrieron ataques DDoS durante el pago del IFE, dificultando que las personas accedieran a sus cuentas justo cuando más lo necesitaban.</p>
+                            <p><strong>Testimonio:</strong><br>"Era el día de pago del IFE y necesitaba urgentemente ese dinero para comprar medicamentos para mi mamá. Intenté entrar a la app del banco toda la mañana pero no cargaba nunca. Pensé que era mi teléfono o mi internet, pero después me enteré que era un ataque. Tuve que esperar dos días más para poder retirar el dinero. Fueron dos días de mucha angustia." - Patricia, 45 años, dueña de casa de Puente Alto.</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#caseCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#caseCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+
+            <h2>Recuerda:</h2>
+            <p>Los delincuentes cibernéticos evolucionan constantemente, pero conociendo estas amenazas básicas y manteniéndote alerta, puedes protegerte efectivamente.</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container text-center">
+            <p>© 2025 Ciberseguridad. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
