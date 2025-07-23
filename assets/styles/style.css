@@ -17,23 +17,34 @@ body {
     color: #e9ecef !important;
 }
 
-/* Hero section styles */
+/* Sección Hero */
 .hero-section {
-    background-color: #007bff;
+    background: linear-gradient(135deg, rgba(0, 123, 255, 0.85), rgba(0, 92, 191, 0.9)), 
+                url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
     color: white;
     padding: 4rem 0;
     text-align: center;
+    position: relative;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
 }
 
 .hero-section h1 {
-    color: #ffffff; /* Pure white for emphasis */
+    color: #ffffff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    font-weight: 700;
 }
 
 .hero-section .lead {
-    color: #e9ecef; /* Slightly darker than title for contrast */
+    color: #f8f9fa;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+    font-weight: 400;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
-/* Content section styles */
+/* Secciones de contenido */
 .content-section {
     padding: 3rem 0;
 }
@@ -42,7 +53,7 @@ h1, h2, h3 {
     color: #005cbf;
 }
 
-/* Card styles */
+/* Cards */
 .card {
     border: none;
     border-radius: 10px;
@@ -76,7 +87,7 @@ h1, h2, h3 {
     box-shadow: 0 8px 16px rgba(0,0,0,0.2);
 }
 
-/* Form styles */
+/* Forms */
 .form-control, .form-select {
     border-radius: 8px;
 }
@@ -92,7 +103,7 @@ h1, h2, h3 {
     background-color: #004a99;
 }
 
-/* Carousel styles */
+/* Carrusel */
 .carousel-inner {
     background-color: #e9ecef;
     border-radius: 8px;
@@ -112,7 +123,7 @@ h1, h2, h3 {
     filter: invert(20%) sepia(10%) saturate(1000%) hue-rotate(180deg) brightness(90%) contrast(100%);
 }
 
-/* Testimony and additional info styles */
+/* Testimonios e información adicional */
 .testimony {
     background-color: #e9ecef;
     padding: 1.5rem;
@@ -127,7 +138,7 @@ h1, h2, h3 {
     margin-top: 3rem;
 }
 
-/* Modal styles */
+/* Modales */
 .modal-content {
     border-radius: 10px;
 }
@@ -136,17 +147,19 @@ h1, h2, h3 {
     margin-top: 1rem;
 }
 
-/* Footer styles */
+/* Footer */
 footer {
     background-color: #343a40;
     color: white;
     padding: 2rem 0;
 }
 
-/* Responsive styles */
+/* Responsividad */
 @media (max-width: 768px) {
     .hero-section {
         padding: 2rem 0;
+        min-height: 300px;
+        background-attachment: scroll;
     }
     
     .content-section {
