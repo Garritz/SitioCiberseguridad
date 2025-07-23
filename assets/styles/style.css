@@ -1,0 +1,194 @@
+body {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    background-color: #007bff;
+}
+
+.navbar-brand, .nav-link {
+    color: white !important;
+}
+
+.nav-link:hover {
+    color: #e9ecef !important;
+}
+
+/* Hero section styles */
+.hero-section {
+    background-color: #007bff;
+    color: white;
+    padding: 4rem 0;
+    text-align: center;
+}
+
+.hero-section h1 {
+    color: #ffffff; /* Pure white for emphasis */
+}
+
+.hero-section .lead {
+    color: #e9ecef; /* Slightly darker than title for contrast */
+}
+
+/* Content section styles */
+.content-section {
+    padding: 3rem 0;
+}
+
+h1, h2, h3 {
+    color: #005cbf;
+}
+
+/* Card styles */
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin-bottom: 1.5rem;
+}
+
+.threat-card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin-bottom: 1.5rem;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.threat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.practice-card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin-bottom: 1.5rem;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.practice-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+/* Form styles */
+.form-control, .form-select {
+    border-radius: 8px;
+}
+
+.btn-primary {
+    background-color: #005cbf;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+}
+
+.btn-primary:hover {
+    background-color: #004a99;
+}
+
+/* Carousel styles */
+.carousel-inner {
+    background-color: #e9ecef;
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.carousel-item {
+    min-height: 200px;
+}
+
+.carousel-control-prev, .carousel-control-next {
+    width: 5%;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    filter: invert(20%) sepia(10%) saturate(1000%) hue-rotate(180deg) brightness(90%) contrast(100%);
+}
+
+/* Testimony and additional info styles */
+.testimony {
+    background-color: #e9ecef;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.additional-info {
+    background-color: #e9ecef;
+    padding: 2rem;
+    border-radius: 10px;
+    margin-top: 3rem;
+}
+
+/* Modal styles */
+.modal-content {
+    border-radius: 10px;
+}
+
+.alert {
+    margin-top: 1rem;
+}
+
+/* Footer styles */
+footer {
+    background-color: #343a40;
+    color: white;
+    padding: 2rem 0;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 2rem 0;
+    }
+    
+    .content-section {
+        padding: 1.5rem 0;
+    }
+    
+    .additional-info {
+        padding: 1.5rem;
+        margin-top: 2rem;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+    }
+    
+    .carousel-item {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+    
+    .nav-link {
+        font-size: 0.9rem;
+    }
+    
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    .threat-card {
+        margin-bottom: 1rem;
+    }
+    
+    .practice-card {
+        margin-bottom: 1rem;
+    }
+}
